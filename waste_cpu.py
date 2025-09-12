@@ -15,7 +15,6 @@ class WasteCpuManager:
         self.cc = "gcc"
         self.cflags = ["-Wall", "-Wextra"]
         self.perf_duration = 10
-        self.perf_events = "cycles,instructions,cache-references,cache-misses,branch-instructions,branch-misses"
         self.opt_level = 3  # Default to -O3
         self.working_dir = os.getcwd()
 
@@ -127,7 +126,7 @@ class WasteCpuManager:
                 # Count both total syscalls and individual syscalls
                 cmd.extend(["-a", "-e", "raw_syscalls:sys_enter,syscalls:sys_enter_*"])
             else:
-                cmd.extend(["-e", self.perf_events])
+                cmd.append("--")
                 
             cmd.extend([f"./{basename}", str(duration)])
             
@@ -137,7 +136,7 @@ class WasteCpuManager:
                     print("done")
                 
                 # Parse the stderr output (perf writes to stderr)
-                parsed = self._parse_perf_output(result.stderr, syscalls)
+                parsed = self._parse_perf_output(result.stderr, syscalls, duration)
                 if parsed:
                     results.append(parsed)
                 else:
@@ -158,7 +157,7 @@ class WasteCpuManager:
             print("No successful perf runs completed")
             return False
     
-    def _parse_perf_output(self, output, syscalls=False):
+    def _parse_perf_output(self, output, syscalls=False, expected_duration=None):
         """Parse perf stat output and extract metrics."""
         import re
         
@@ -233,6 +232,12 @@ class WasteCpuManager:
             if total_cpu_time > 0:
                 metrics['sys_time_pct'] = (metrics['sys_time'] / total_cpu_time) * 100
         
+        # Calculate time accuracy by comparing elapsed time with expected duration
+        if expected_duration is not None and 'time_elapsed' in metrics:
+            actual_time = metrics['time_elapsed']
+            accuracy_error = abs(actual_time - expected_duration) / expected_duration * 100
+            metrics['time_accuracy_pct'] = 100.0 - accuracy_error
+        
         return metrics if metrics else None
     
     def _display_perf_results(self, results, basename, duration, runs, syscalls=False):
@@ -278,6 +283,7 @@ class WasteCpuManager:
             # Add timing metrics
             metrics_info.extend([
                 ('time_elapsed', 'Time Elapsed (s)'),
+                ('time_accuracy_pct', 'Time Accuracy %'),
                 ('user_time', 'User Time (s)'),
                 ('sys_time', 'Sys Time (s)')
             ])
@@ -290,10 +296,12 @@ class WasteCpuManager:
                 ('cache-references', 'Cache Refs'),
                 ('cache-misses', 'Cache Misses'),
                 ('cache_miss_pct', 'Cache Miss %'),
+                ('branches', 'Branches'),
                 ('branch-instructions', 'Branch Instr'),
                 ('branch-misses', 'Branch Misses'),
                 ('branch_miss_pct', 'Branch Miss %'),
                 ('time_elapsed', 'Time Elapsed (s)'),
+                ('time_accuracy_pct', 'Time Accuracy %'),
                 ('user_time', 'User Time (s)'),
                 ('sys_time', 'Sys Time (s)'),
                 ('sys_time_pct', 'Sys Time %')
