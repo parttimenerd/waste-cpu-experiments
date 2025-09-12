@@ -14,6 +14,7 @@ This project compares various CPU-intensive strategies to understand their perfo
 - `volatile-loop.c` - CPU-wasting loop with volatile operations
 - `noinline.c` - CPU-wasting loop with noinline function attribute
 - `noopt.c` - CPU-intensive loop with optimization barriers
+- `alarm.c` - Signal-based timing using alarm() and setjmp/longjmp
 - `main.h` - Shared header with main function and timing utilities
 - `waste_cpu.py` - Comprehensive Python utility for compilation and performance analysis
 
@@ -39,7 +40,7 @@ python3 waste_cpu.py --help
 
 ### Python Script Commands
 
-The `waste_cpu.py` script provides three main commands:
+The `waste_cpu.py` script provides four main commands:
 
 #### compile
 Compile C source files with configurable optimization levels:
@@ -71,6 +72,19 @@ sudo python3 waste_cpu.py perf basic --syscalls
 python3 waste_cpu.py perf for-loop -O1 -d 3 -r 5
 ```
 
+#### perf-all
+Run performance tests on all C files in the directory:
+```bash
+# Test all implementations with default settings
+python3 waste_cpu.py perf-all
+
+# Test all with custom duration and multiple runs
+python3 waste_cpu.py perf-all -d 3 -r 5
+
+# System call analysis on all implementations
+sudo python3 waste_cpu.py perf-all --syscalls -d 2
+```
+
 #### Options
 
 - `-O, --optimize`: Optimization level (0-3, default: 3)
@@ -93,8 +107,11 @@ When using multiple runs (`-r` option), the script provides:
 - **Instructions** - Instructions executed  
 - **Insn/Cycle** - Instructions per cycle (IPC)
 - **Cache Refs/Misses** - Memory access patterns and cache miss percentage
-- **Branch Instr/Misses** - Branch prediction efficiency and miss percentage
+- **Branches** - Total branch instructions executed
+- **Branch Misses** - Branch prediction failures and miss percentage
 - **Timing** - Elapsed, user, and system time
+- **Time Accuracy %** - How close actual runtime was to requested duration
+- **Sys Time %** - System time as percentage of total CPU time
 - **Sys Time %** - System time as percentage of total CPU time
 
 ### System Call Tracing (`--syscalls` mode)
@@ -113,9 +130,13 @@ python3 waste_cpu.py perf basic -d 5
 # Statistical analysis across multiple runs  
 python3 waste_cpu.py perf basic -d 3 -r 10
 
-# Compare different implementations
+# Compare all implementations at once
+python3 waste_cpu.py perf-all -d 3 -r 5
+
+# Compare specific implementations individually
 python3 waste_cpu.py perf basic -r 5
 python3 waste_cpu.py perf for-loop -r 5
+python3 waste_cpu.py perf alarm -r 5
 ```
 
 ### Optimization Level Comparison
@@ -132,8 +153,11 @@ python3 waste_cpu.py perf basic -O3 -r 5    # Aggressive optimization
 # Basic syscall tracing (requires root)
 sudo python3 waste_cpu.py perf basic --syscalls -d 2
 
-# Statistical syscall analysis
+# Statistical syscall analysis on single implementation
 sudo python3 waste_cpu.py perf volatile-loop --syscalls -d 3 -r 5
+
+# Compare syscall patterns across all implementations
+sudo python3 waste_cpu.py perf-all --syscalls -d 2
 ```
 
 ### Code Inspection
@@ -146,38 +170,8 @@ python3 waste_cpu.py code basic --add-main # Include main()
 python3 waste_cpu.py code basic
 python3 waste_cpu.py code for-loop
 python3 waste_cpu.py code volatile-loop
+python3 waste_cpu.py code alarm
 ```
-
-## Implementation Characteristics
-
-### `basic.c` 
-Simple clock()-based CPU-wasting loop. Minimal CPU work per iteration, relies on system calls.
-
-### `for-loop.c`
-Adds nested arithmetic operations inside the CPU-wasting loop. More CPU-intensive per iteration.
-
-### `volatile-loop.c` 
-Uses volatile variables to prevent compiler optimizations. Shows impact of memory barriers.
-
-### `noinline.c`
-Uses `__attribute__((noinline))` to prevent function inlining optimizations.
-
-### `noopt.c`  
-Uses optimization barriers and compiler hints to control code generation.
-
-## Analysis Tips
-
-### Performance Testing Best Practices
-- Use multiple runs (`-r 10`) for statistical reliability
-- Test different optimization levels to understand compiler impact
-- Compare system time percentage across implementations
-- Use shorter durations (`-d 2-5`) for quick iteration during development
-
-### System Call Analysis
-- Use `--syscalls` mode to understand system interaction patterns
-- Compare syscall counts between implementations
-- Look for dominant syscalls (usually `clock_gettime` for timing-based loops)
-- Requires root privileges due to kernel tracing requirements
 
 ## Requirements
 
@@ -198,11 +192,8 @@ sudo yum install perf
 sudo dnf install perf
 
 # Clone/download the project
-git clone <repository-url>
+git clone https://github.com/parttimenerd/waste-cpu
 cd waste-cpu
-
-# Make the script executable
-chmod +x waste_cpu.py
 ```
 
 ## License

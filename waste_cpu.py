@@ -93,7 +93,7 @@ class WasteCpuManager:
     
 
     
-    def perf(self, filename, duration=None, runs=1, syscalls=False):
+    def perf(self, filename, duration=None, runs=1, syscalls=False, quiet_runs=False):
         """Run performance analysis using perf stat."""
         if not filename.endswith(".c"):
             basename = filename
@@ -116,9 +116,15 @@ class WasteCpuManager:
             print("Warning: Syscalls measurement may require root privileges. If it fails, try running with sudo.")
         
         results = []
+        if runs > 1 and quiet_runs:
+            print("Runs: ", end="", flush=True)
+            
         for run in range(runs):
             if runs > 1:
-                print(f"  Run {run + 1}/{runs}...", end=" ", flush=True)
+                if quiet_runs:
+                    print(".", end="", flush=True)
+                else:
+                    print(f"  Run {run + 1}/{runs}...", end=" ", flush=True)
             
             cmd = ["perf", "stat"]
             
@@ -132,7 +138,7 @@ class WasteCpuManager:
             
             try:
                 result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-                if runs > 1:
+                if runs > 1 and not quiet_runs:
                     print("done")
                 
                 # Parse the stderr output (perf writes to stderr)
@@ -150,12 +156,50 @@ class WasteCpuManager:
                 print("Error: 'perf' command not found. Please install the perf utility.")
                 return False
         
+        if runs > 1 and quiet_runs:
+            print()  # Add newline after dots
+        
         if results:
             self._display_perf_results(results, basename, duration, runs, syscalls)
             return True
         else:
             print("No successful perf runs completed")
             return False
+    
+    def perf_all(self, duration=None, runs=1, syscalls=False):
+        """Run performance analysis on all C files in the current directory."""
+        import glob
+        
+        # Find all .c files in the current directory
+        c_files = glob.glob("*.c")
+        if not c_files:
+            print("No .c files found in the current directory")
+            return False
+        
+        # Filter out main.h if it exists as a .c file
+        c_files = [f for f in c_files if not f.startswith("main")]
+        c_files.sort()
+        
+        if not c_files:
+            print("No implementation .c files found (excluding main.c)")
+            return False
+        
+        print(f"Running performance tests on {len(c_files)} files: {', '.join(c_files)}")
+        print()
+        
+        success_count = 0
+        for filename in c_files:
+            print(f"{'='*60}")
+            print(f"Testing {filename}")
+            print(f"{'='*60}")
+            
+            if self.perf(filename, duration, runs, syscalls, quiet_runs=True):
+                success_count += 1
+            else:
+                print(f"Failed to run perf test for {filename}")
+        
+        print(f"\nCompleted perf tests: {success_count}/{len(c_files)} successful")
+        return success_count > 0
     
     def _parse_perf_output(self, output, syscalls=False, expected_duration=None):
         """Parse perf stat output and extract metrics."""
@@ -349,9 +393,9 @@ class WasteCpuManager:
 def main():
     """Parse arguments and dispatch commands."""
     parser = argparse.ArgumentParser(description="Manage waste-cpu experiments")
-    parser.add_argument("command", choices=["compile", "code", "perf"],
+    parser.add_argument("command", choices=["compile", "code", "perf", "perf-all"],
                         help="Command to execute")
-    parser.add_argument("filename", help="C file to work with (with or without .c extension)")
+    parser.add_argument("filename", nargs='?', help="C file to work with (with or without .c extension, not needed for perf-all)")
     parser.add_argument("-O", "--optimize", type=int, default=3,
                         help="Optimization level (0-3, default: 3)")
     parser.add_argument("-d", "--duration", type=int,
@@ -370,12 +414,19 @@ def main():
     if args.duration:
         manager.perf_duration = args.duration
     
-    if args.command == "compile":
-        manager.compile(args.filename)
-    elif args.command == "code":
-        manager.show_code(args.filename, include_main=args.add_main)
-    elif args.command == "perf":
-        manager.perf(args.filename, args.duration, args.runs, args.syscalls)
+    if args.command == "perf-all":
+        manager.perf_all(args.duration, args.runs, args.syscalls)
+    elif args.command in ["compile", "code", "perf"]:
+        if not args.filename:
+            print(f"Error: filename is required for {args.command} command")
+            return
+        
+        if args.command == "compile":
+            manager.compile(args.filename)
+        elif args.command == "code":
+            manager.show_code(args.filename, include_main=args.add_main)
+        elif args.command == "perf":
+            manager.perf(args.filename, args.duration, args.runs, args.syscalls)
 
 
 if __name__ == "__main__":
