@@ -116,7 +116,7 @@ class WasteCpuManager:
             print("Warning: Syscalls measurement may require root privileges. If it fails, try running with sudo.")
         
         results = []
-        if runs > 1 and quiet_runs:
+        if quiet_runs:
             print("Runs: ", end="", flush=True)
             
         for run in range(runs):
@@ -130,7 +130,7 @@ class WasteCpuManager:
             
             if syscalls:
                 # Count both total syscalls and individual syscalls
-                cmd.extend(["-a", "-e", "raw_syscalls:sys_enter,syscalls:sys_enter_*"])
+                cmd.extend(["-e", "raw_syscalls:sys_enter,syscalls:sys_enter_*"])
             else:
                 cmd.append("--")
                 
@@ -138,7 +138,7 @@ class WasteCpuManager:
             
             try:
                 result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-                if runs > 1 and not quiet_runs:
+                if not quiet_runs:
                     print("done")
                 
                 # Parse the stderr output (perf writes to stderr)
@@ -156,7 +156,7 @@ class WasteCpuManager:
                 print("Error: 'perf' command not found. Please install the perf utility.")
                 return False
         
-        if runs > 1 and quiet_runs:
+        if quiet_runs:
             print()  # Add newline after dots
         
         if results:
@@ -426,7 +426,7 @@ def main():
         elif args.command == "code":
             manager.show_code(args.filename, include_main=args.add_main)
         elif args.command == "perf":
-            manager.perf(args.filename, args.duration, args.runs, args.syscalls)
+            manager.perf(args.filename, args.duration, args.runs, args.syscalls, quiet_runs=True)
 
 
 if __name__ == "__main__":

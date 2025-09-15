@@ -1,0 +1,265 @@
+Running performance tests on 6 files: alarm.c, asm-loop.c, basic.c, for-loop.c, noopt.c, volatile-loop.c
+
+============================================================
+Testing alarm.c
+============================================================
+Compiling alarm.c with -O0...
+Successfully compiled alarm
+Running alarm 100 times for 10 seconds each (measuring syscalls)...
+Runs: ....................................................................................................
+
+ Syscalls Results for alarm (100 runs):
+================================================================================
+Metric                      Mean     Std Dev (%)             Min             Max
+--------------------------------------------------------------------------------
+Total Syscalls                36           0.00%              36              36
+Mmap                           8           0.00%               8               8
+Brk                            3           0.00%               3               3
+Mprotect                       3           0.00%               3               3
+Newfstat                       3           0.00%               3               3
+Close                          2           0.00%               2               2
+Openat                         2           0.00%               2               2
+Pread64                        2           0.00%               2               2
+Arch Prctl                     1           0.00%               1               1
+Set Tid Address                1           0.00%               1               1
+Exit Group                     1           0.00%               1               1
+Rt Sigaction                   1           0.00%               1               1
+Prlimit64                      1           0.00%               1               1
+Alarm                          1           0.00%               1               1
+Set Robust List                1           0.00%               1               1
+Rseq                           1           0.00%               1               1
+Munmap                         1           0.00%               1               1
+Access                         1           0.00%               1               1
+Write                          1           0.00%               1               1
+Read                           1           0.00%               1               1
+Getrandom                      1           0.00%               1               1
+Time Elapsed (s)       10.001828           0.00%       10.001469       10.002565
+Time Accuracy %           99.982           0.00%          99.974          99.985
+User Time (s)           9.979849           0.04%        9.965575        9.988427
+Sys Time (s)            0.005041          41.87%        0.000998        0.010979
+
+============================================================
+Testing asm-loop.c
+============================================================
+Compiling asm-loop.c with -O0...
+Successfully compiled asm-loop
+Running asm-loop 100 times for 10 seconds each (measuring syscalls)...
+Runs: ....................................................................................................
+
+ Syscalls Results for asm-loop (100 runs):
+================================================================================
+Metric                      Mean     Std Dev (%)             Min             Max
+--------------------------------------------------------------------------------
+Total Syscalls             5,589           0.20%           5,554           5,612
+Clock Gettime              5,555           0.20%           5,520           5,578
+Mmap                           8           0.00%               8               8
+Brk                            3           0.00%               3               3
+Mprotect                       3           0.00%               3               3
+Newfstat                       3           0.00%               3               3
+Close                          2           0.00%               2               2
+Openat                         2           0.00%               2               2
+Pread64                        2           0.00%               2               2
+Arch Prctl                     1           0.00%               1               1
+Set Tid Address                1           0.00%               1               1
+Exit Group                     1           0.00%               1               1
+Prlimit64                      1           0.00%               1               1
+Set Robust List                1           0.00%               1               1
+Rseq                           1           0.00%               1               1
+Munmap                         1           0.00%               1               1
+Access                         1           0.00%               1               1
+Write                          1           0.00%               1               1
+Read                           1           0.00%               1               1
+Getrandom                      1           0.00%               1               1
+Time Elapsed (s)       10.019318           0.02%       10.013911       10.027778
+Time Accuracy %           99.807           0.02%          99.722          99.861
+User Time (s)           9.991504           0.04%        9.983921        9.998441
+Sys Time (s)            0.011242          31.69%        0.004991        0.018966
+
+============================================================
+Testing basic.c
+============================================================
+Compiling basic.c with -O0...
+Successfully compiled basic
+Running basic 100 times for 10 seconds each (measuring syscalls)...
+Runs: ....................................................................................................
+
+ Syscalls Results for basic (100 runs):
+================================================================================
+Metric                      Mean     Std Dev (%)             Min             Max
+--------------------------------------------------------------------------------
+Total Syscalls        10,631,169           0.36%      10,564,639      10,774,921
+Clock Gettime         10,631,135           0.36%      10,564,605      10,774,887
+Mmap                           8           0.00%               8               8
+Brk                            3           0.00%               3               3
+Mprotect                       3           0.00%               3               3
+Newfstat                       3           0.00%               3               3
+Close                          2           0.00%               2               2
+Openat                         2           0.00%               2               2
+Pread64                        2           0.00%               2               2
+Arch Prctl                     1           0.00%               1               1
+Set Tid Address                1           0.00%               1               1
+Exit Group                     1           0.00%               1               1
+Prlimit64                      1           0.00%               1               1
+Set Robust List                1           0.00%               1               1
+Rseq                           1           0.00%               1               1
+Munmap                         1           0.00%               1               1
+Access                         1           0.00%               1               1
+Write                          1           0.00%               1               1
+Read                           1           0.00%               1               1
+Getrandom                      1           0.00%               1               1
+Time Elapsed (s)       10.018473           0.03%       10.012366       10.025005
+Time Accuracy %           99.815           0.03%          99.750          99.876
+User Time (s)           1.012377           2.89%        0.912692        1.079257
+Sys Time (s)            8.989492           0.33%        8.922596        9.088980
+
+============================================================
+Testing for-loop.c
+============================================================
+Compiling for-loop.c with -O0...
+Successfully compiled for-loop
+Running for-loop 100 times for 10 seconds each (measuring syscalls)...
+Runs: ....................................................................................................
+
+ Syscalls Results for for-loop (100 runs):
+================================================================================
+Metric                      Mean     Std Dev (%)             Min             Max
+--------------------------------------------------------------------------------
+Total Syscalls            54,412           0.31%          53,869          54,808
+Clock Gettime             54,378           0.31%          53,835          54,774
+Mmap                           8           0.00%               8               8
+Brk                            3           0.00%               3               3
+Mprotect                       3           0.00%               3               3
+Newfstat                       3           0.00%               3               3
+Close                          2           0.00%               2               2
+Openat                         2           0.00%               2               2
+Pread64                        2           0.00%               2               2
+Arch Prctl                     1           0.00%               1               1
+Set Tid Address                1           0.00%               1               1
+Exit Group                     1           0.00%               1               1
+Prlimit64                      1           0.00%               1               1
+Set Robust List                1           0.00%               1               1
+Rseq                           1           0.00%               1               1
+Munmap                         1           0.00%               1               1
+Access                         1           0.00%               1               1
+Write                          1           0.00%               1               1
+Read                           1           0.00%               1               1
+Getrandom                      1           0.00%               1               1
+Time Elapsed (s)       10.019211           0.03%       10.014265       10.026641
+Time Accuracy %           99.808           0.03%          99.734          99.857
+User Time (s)           9.947127           0.08%        9.928477        9.964812
+Sys Time (s)            0.054782          14.07%        0.036951        0.073869
+
+============================================================
+Testing noopt.c
+============================================================
+Compiling noopt.c with -O0...
+Successfully compiled noopt
+Running noopt 100 times for 10 seconds each (measuring syscalls)...
+Runs: ....................................................................................................
+
+ Syscalls Results for noopt (100 runs):
+================================================================================
+Metric                      Mean     Std Dev (%)             Min             Max
+--------------------------------------------------------------------------------
+Total Syscalls             5,597           0.25%           5,562           5,624
+Clock Gettime              5,563           0.25%           5,528           5,590
+Mmap                           8           0.00%               8               8
+Brk                            3           0.00%               3               3
+Mprotect                       3           0.00%               3               3
+Newfstat                       3           0.00%               3               3
+Close                          2           0.00%               2               2
+Openat                         2           0.00%               2               2
+Pread64                        2           0.00%               2               2
+Arch Prctl                     1           0.00%               1               1
+Set Tid Address                1           0.00%               1               1
+Exit Group                     1           0.00%               1               1
+Prlimit64                      1           0.00%               1               1
+Set Robust List                1           0.00%               1               1
+Rseq                           1           0.00%               1               1
+Munmap                         1           0.00%               1               1
+Access                         1           0.00%               1               1
+Write                          1           0.00%               1               1
+Read                           1           0.00%               1               1
+Getrandom                      1           0.00%               1               1
+Time Elapsed (s)       10.019604           0.03%       10.013648       10.029478
+Time Accuracy %           99.804           0.03%          99.705          99.864
+User Time (s)           9.991166           0.04%        9.980384        9.998506
+Sys Time (s)            0.011651          31.24%        0.003994        0.021959
+
+============================================================
+Testing volatile-loop.c
+============================================================
+Compiling volatile-loop.c with -O0...
+Successfully compiled volatile-loop
+Running volatile-loop 100 times for 10 seconds each (measuring syscalls)...
+Runs: ....................................................................................................
+
+ Syscalls Results for volatile-loop (100 runs):
+================================================================================
+Metric                      Mean     Std Dev (%)             Min             Max
+--------------------------------------------------------------------------------
+Total Syscalls            49,291           0.13%          49,108          49,383
+Clock Gettime             49,257           0.13%          49,074          49,349
+Mmap                           8           0.00%               8               8
+Brk                            3           0.00%               3               3
+Mprotect                       3           0.00%               3               3
+Newfstat                       3           0.00%               3               3
+Close                          2           0.00%               2               2
+Openat                         2           0.00%               2               2
+Pread64                        2           0.00%               2               2
+Arch Prctl                     1           0.00%               1               1
+Set Tid Address                1           0.00%               1               1
+Exit Group                     1           0.00%               1               1
+Prlimit64                      1           0.00%               1               1
+Set Robust List                1           0.00%               1               1
+Rseq                           1           0.00%               1               1
+Munmap                         1           0.00%               1               1
+Access                         1           0.00%               1               1
+Write                          1           0.00%               1               1
+Read                           1           0.00%               1               1
+Getrandom                      1           0.00%               1               1
+Time Elapsed (s)       10.019068           0.03%       10.013487       10.027657
+Time Accuracy %           99.809           0.03%          99.723          99.865
+User Time (s)           9.952005           0.07%        9.936486        9.968956
+Sys Time (s)            0.050002          14.21%        0.032946        0.065897
+
+
+Completed perf tests: 6/6 successful
+Compiling monotonic.c with -O0...
+Successfully compiled monotonic
+Running monotonic 100 times for 10 seconds each (measuring syscalls)...
+  Run 1/100... done
+  Run 2/100... done
+  Run 3/100... Compiling monotonic.c with -O0...
+Successfully compiled monotonic
+Running monotonic 100 times for 10 seconds each (measuring syscalls)...
+Runs: ....................................................................................................
+
+ Syscalls Results for monotonic (100 runs):
+================================================================================
+Metric                      Mean     Std Dev (%)             Min             Max
+--------------------------------------------------------------------------------
+Total Syscalls                34           0.00%              34              34
+Mmap                           8           0.00%               8               8
+Brk                            3           0.00%               3               3
+Mprotect                       3           0.00%               3               3
+Newfstat                       3           0.00%               3               3
+Close                          2           0.00%               2               2
+Openat                         2           0.00%               2               2
+Pread64                        2           0.00%               2               2
+Arch Prctl                     1           0.00%               1               1
+Set Tid Address                1           0.00%               1               1
+Exit Group                     1           0.00%               1               1
+Prlimit64                      1           0.00%               1               1
+Set Robust List                1           0.00%               1               1
+Rseq                           1           0.00%               1               1
+Munmap                         1           0.00%               1               1
+Access                         1           0.00%               1               1
+Write                          1           0.00%               1               1
+Read                           1           0.00%               1               1
+Getrandom                      1           0.00%               1               1
+Time Elapsed (s)       10.002141           0.01%       10.001551       10.005001
+Time Accuracy %           99.979           0.01%          99.950          99.984
+User Time (s)           9.906199           0.58%        9.821800        9.985022
+Sys Time (s)            0.039511          69.30%        0.001997        0.082663
+
