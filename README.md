@@ -18,6 +18,7 @@ done on Linux.
 - `for-loop.c` - CPU-intensive loop with nested arithmetic operations
 - `volatile-loop.c` - CPU-wasting loop with volatile operations
 - `noopt.c` - CPU-intensive loop with optimization barriers
+- `asm.c` – CPU-wasting loop that prevents optimisation by using inline assembly
 - `alarm.c` - Signal-based timing using alarm() and setjmp/longjmp
 - `monotonic.c` – uses the monotonic clock to reduce number of syscalls
 - `main.h` - Shared header with main function and timing utilities
