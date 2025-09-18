@@ -19,6 +19,7 @@ done on Linux.
 - `volatile-loop.c` - CPU-wasting loop with volatile operations
 - `noopt.c` - CPU-intensive loop with optimization barriers
 - `alarm.c` - Signal-based timing using alarm() and setjmp/longjmp
+- `monotonic.c` – uses the monotonic clock to reduce number of syscalls
 - `main.h` - Shared header with main function and timing utilities
 - `waste_cpu.py` - Comprehensive Python utility for compilation and performance analysis
 
