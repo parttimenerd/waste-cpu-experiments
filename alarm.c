@@ -11,7 +11,7 @@ void alarm_handler(int sig) {
     longjmp(jump_buffer, 1);
 }
 
-void wait(int seconds) {
+void my_wait(int seconds) {
     // Set up the alarm handler
     signal(SIGALRM, alarm_handler);
     

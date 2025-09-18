@@ -7,12 +7,16 @@ A collection of C programs demonstrating different CPU-wasting implementations f
 
 This project compares various CPU-intensive strategies to understand their performance characteristics under different compiler optimizations. Each implementation uses the same interface but different internal approaches to consume CPU cycles efficiently. The Python management script provides comprehensive performance analysis including statistical measurement and system call tracing.
 
+## Requirements
+
+The code is tested on Linux and Mac OS, but the perf reporting is only
+done on Linux. 
+
 ## Files
 
 - `basic.c` - Simple CPU-wasting loop using clock() function
 - `for-loop.c` - CPU-intensive loop with nested arithmetic operations
 - `volatile-loop.c` - CPU-wasting loop with volatile operations
-- `noinline.c` - CPU-wasting loop with noinline function attribute
 - `noopt.c` - CPU-intensive loop with optimization barriers
 - `alarm.c` - Signal-based timing using alarm() and setjmp/longjmp
 - `main.h` - Shared header with main function and timing utilities
